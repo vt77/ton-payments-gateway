@@ -1,0 +1,38 @@
+{
+  "ok": true,
+  "result": [
+    {
+      "@type": "raw.transaction",
+      "address": {
+        "@type": "accountAddress",
+        "account_address": "EQCE5ejoigqjL0JHcIb8k-JRIYC1J_pw9TDb1gxJHCr9GRAz"
+      },
+      "utime": 1723059496,
+      "data": "te6cckECBQEAASMAA694Tl6OiKCqMvQkdwhvyT4lEhgLUn+nD1MNvWDEkcKv0ZAAAWTtMLZwEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAZrPNKAABgIAQIDAQGgBACCcpCuyJZa+rsW68PLm0COuucbYY14eIvIDQmENZPKyY2kNVrI2f/WlWCKj3v1fZ0m4LM+R5c4xgWbDnwDfKMvmLsADwwJAX14QAEgAOVIAC0Y8PI9kIeWopMzqXGlkSy9uaAxfD4b6zdHzHO25QthACE5ejoigqjL0JHcIb8k+JRIYC1J/pw9TDb1gxJHCr9GUBfXhAAGCCNaAAAsnaXZxQTNZ5pCAAAAABkopTg4Mj0qsiI9OaOqIhw6vLa7szjAc4uSbQ==",
+      "transaction_id": {
+        "@type": "internal.transactionId",
+        "lt": "24527804000001",
+        "hash": "3cpLiwfwa0WYYl1f5/B8+a093TbYu5wo07X8iNYNSiQ="
+      },
+      "fee": "0",
+      "storage_fee": "0",
+      "other_fee": "0",
+      "in_msg": {
+        "@type": "raw.message",
+        "source": "EQAWjHh5HshDy1FJmdS40siWXtzQGL4fDfWbo-Y523KFsDdJ",
+        "destination": "EQCE5ejoigqjL0JHcIb8k-JRIYC1J_pw9TDb1gxJHCr9GRAz",
+        "value": "100000000",
+        "fwd_fee": "266669",
+        "ihr_fee": "0",
+        "created_lt": "24527802000002",
+        "body_hash": "0Nap8zRGhCbZwu+VjEYq5iaxsEZFoQFmkdkwi5Yu0QQ=",
+        "msg_data": {
+          "@type": "msg.dataText",
+          "text": "MlFKcHBkelVkRHpzR1REOHV5bXdmcQ=="
+        },
+        "message": "2QJppdzUdDzsGTD8uymwfq"
+      },
+      "out_msgs": []
+    }
+  ]
+}

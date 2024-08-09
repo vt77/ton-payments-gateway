@@ -1,0 +1,38 @@
+@baseUrl = http://localhost:8080
+
+
+# @name create
+POST {{baseUrl}}/invoices/create
+Content-Type: application/json
+
+{
+    "amount": "1",
+    "srcpurse": "asdasdsad",
+    "context": {
+        "user_id":100,
+        "chat_id":"23cd3234fsfsdxzw334"
+    }
+}
+
+### Get created  
+
+@invoice_id = {{create.response.body.data.invoice.id}}
+
+GET {{baseUrl}}/invoices/{{invoice_id}}
+
+
+### Get List
+
+GET {{baseUrl}}/invoices
+
+### Transactions
+
+GET {{baseUrl}}/transactions
+
+### Address
+
+GET {{baseUrl}}/address
+
+### Check address
+
+GET {{baseUrl}}/address/EQAWjHh5HshDy1FJmdS40siWXtzQGL4fDfWbo-Y523KFsDdJ

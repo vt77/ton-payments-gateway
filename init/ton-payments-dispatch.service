@@ -1,0 +1,15 @@
+[Unit]
+Description=TON payments JSON-RPC endpoint
+After=multi-user.target
+
+[Service]
+WorkingDirectory=/home/admin/workspace/ton-payments-gateway
+Type=simple
+Restart=always
+ExecStart=/usr/bin/python3 -u ./dispatcher.py
+StandardOutput=syslog
+StandardError=syslog
+
+[Install]
+WantedBy=multi-user.target
+

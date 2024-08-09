@@ -1,0 +1,22 @@
+{
+    "crypto":{
+    	"main_token": "Your mainnet api token",
+    	"test_token": "Your test token",
+    	"test_wallet": "kQCE5ejoigqjL0JHcIb8k-JRIYC1J_pw9TDb1gxJHCr9Gau5",
+    	"main_wallet": "EQCE5ejoigqjL0JHcIb8k-JRIYC1J_pw9TDb1gxJHCr9GRAz",
+    	"mode": "test"
+    },
+    "db":{
+    	"user": "your_db_user",
+    	"password": "your_db_password",
+    	"database":"your_db_name"
+    },
+    "api":{
+    	"sign_key":"Key to sign requests",
+	"webhook_url" : "https://your_webhook_url"
+   },
+   "telegrambot":{
+		"token":"bot_token",
+		"chat_id":"chat_id_for_messages"
+   }
+}
