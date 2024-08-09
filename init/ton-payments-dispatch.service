@@ -1,5 +1,5 @@
 [Unit]
-Description=TON payments JSON-RPC endpoint
+Description=TON payments dispatcher
 After=multi-user.target
 
 [Service]
@@ -12,4 +12,3 @@ StandardError=syslog
 
 [Install]
 WantedBy=multi-user.target
-
