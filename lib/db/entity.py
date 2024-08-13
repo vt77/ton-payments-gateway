@@ -92,7 +92,7 @@ class Transaction():
         self._utime = data['utime']
         self._srcpurse = data['srcpurse']
         self._dstpurse = data['dstpurse']
-        self._value = data['value']
+        self._value = int(data['value'])
         self._message = data['message']
         self._fee = data['fee']
 

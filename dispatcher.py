@@ -47,7 +47,7 @@ def create_webhook_data(invoice):
 
 async def bot_message_queue_processor():
     while(1):
-        message = await webhook_queue.get()
+        message = await message_queue.get()
         telegrambot.send_message(message)
         await asyncio.sleep(1)
 
@@ -56,8 +56,10 @@ async def webhook_queue_processor():
         webhook_data = await webhook_queue.get()
         logger.debug('Sending webhook %s attempt %s',webhook_data['invoice']['id'],webhook_data['attempt'])
         async with aiohttp.ClientSession() as session:
+            try:
                 async with session.post(config.api['webhook_url'],json=json.dumps(webhook_data)) as resp:
                     if not accepted_statuses(resp.status):
+                        logger.warning(f'webhook bad status code : %s %s',resp.status,webhook_data)
                         if webhook_data['attempt'] < 3:
                             # Wait and retray after delay
                             webhook_data['attempt'] = webhook_data['attempt'] + 1
@@ -65,6 +67,10 @@ async def webhook_queue_processor():
                             await asyncio.sleep(3)
                         else:
                             logger.error('Webhook for %s failed with code %s',webhook_data['invoice']['id'], resp.status)
+            except aiohttp.ClientConnectorError as e:
+                logger.error("Error connect to webhook server :%s",str(e))
+                webhook_queue.put_nowait(webhook_data)
+                await asyncio.sleep(5)
         await asyncio.sleep(1)
 
 def update_invoice_from_transaction(transaction):
@@ -89,12 +95,16 @@ async def transactions_check():
     if len(pending_invoices) > 0:
         logger.debug("Pending invoices count %s",len(pending_invoices))
         for t in crypto.transactions:
+            logger.debug("Check transaction %s",t)
             if t.invoice_id in pending_invoices:
                 try:
                     invoice = update_invoice_from_transaction(t)
-                    message_queue.put_nowait("Invoice paid {t.invoice_id} {invoice.amount}")
+                    webhook_data = create_webhook_data(invoice)
+                    logger.debug("Append webhook queue %s",webhook_data)
                     webhook_queue.put_nowait(create_webhook_data(invoice))
+                    message_queue.put_nowait(f"<b>Invoice paid</b>\nId: {t.invoice_id}\nAmount: {invoice.amount}\nFrom: {t._srcpurse}\nTo: {t._dstpurse} Transaction: {t.hash}")
                 except Exception as ex:
+                    logger.exception(str(ex))
                     message_queue.put_nowait(f"#whereismyfucknmoney Invoice {t.invoice_id} process error : {str(ex)}")
 
 async def transactions_check_processor():

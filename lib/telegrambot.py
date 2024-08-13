@@ -23,7 +23,7 @@ class TelegramBot:
         yield data['result']
 
     def send_message(self,message):
-        with self._method_call('sendMessage',{'chat_id':self._chat_id,'text':message}) as res:
+        with self._method_call('sendMessage',{'chat_id':self._chat_id,'text':message,'parse_mode':'html'}) as res:
             return res 
     
     def get_updates(self):
