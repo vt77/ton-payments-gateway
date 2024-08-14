@@ -64,12 +64,13 @@ async def create_invoce(request):
         invoice_data['dstpurse'] = crypto.wallet
         invoice = db.create_invoice(**invoice_data)
         telegrambot.send_message(message=f"New invoice created {invoice.id}")
+        nanotons = int(invoice.amount * 1000000000)
         ctx.response = {
             'invoice' : dict(invoice),
             'links' : [
-                {'text':"Ton Wallet", 'url':f"ton://transfer/{crypto.wallet}?amount={invoice.amount}&text={invoice.id}"},
-                {'text':"Tonkeeper", 'url':f"https://app.tonkeeper.com/transfer/{crypto.wallet}?amount={invoice.amount}&text={invoice.id}"},
-                {'text':"Tonhub", 'url':f"https://tonhub.com/transfer/{crypto.wallet}?amount={invoice.amount}&text={invoice.id}"}
+                {'text':"Ton Wallet", 'url':f"ton://transfer/{crypto.wallet}?amount={nanotons}&text={invoice.id}"},
+                {'text':"Tonkeeper", 'url':f"https://app.tonkeeper.com/transfer/{crypto.wallet}?amount={nanotons}&text={invoice.id}"},
+                {'text':"Tonhub", 'url':f"https://tonhub.com/transfer/{crypto.wallet}?amount={nanotons}&text={invoice.id}"}
             ]
         }
     return web.json_response(dict(ctx))
