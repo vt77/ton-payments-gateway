@@ -44,7 +44,8 @@ class MySqlBackend:
             if 'expired' not in params:
                 params['expired'] = datetime.now(tz=timezone.utc) + timedelta(minutes = 30)
             params['context'] = json.dumps(params.get('context',{}))
-            params['amount'] = params['amount'] * 1000000000 #Store it in nano TONs
+            params['amount'] = float(params['amount']) * 1000000000 #Store it in nano TONs
+            logger.debug("Create invoice : %s",params)
             conn.cursor().execute(_INSERT_QUERY,params)
         return self.load_invoice(invoice_id)
 
@@ -64,7 +65,6 @@ class MySqlBackend:
 
     def load_pending_invoices_ids(self,wallet):
         """Loads invoices in status pending and not expired """
-        logger.info('load pending ids %s',wallet)
         with self.connection() as conn:
             cur = conn.cursor(dictionary=True)
             cur.execute(_SELECT_PENDING,(wallet,))
@@ -80,6 +80,5 @@ class MySqlBackend:
 
     def mark_expired(self):
         with self.connection() as conn:
-            logger.debug("Update expired")
             conn.cursor().execute(_UPDATE_EXPIRED)
             return None

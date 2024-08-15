@@ -67,6 +67,7 @@ async def webhook_queue_processor():
                             await asyncio.sleep(3)
                         else:
                             logger.error('Webhook for %s failed with code %s',webhook_data['invoice']['id'], resp.status)
+                            message_queue.put_nowait(f"webhook faild for {webhook_data['invoice']['id']}")
             except aiohttp.ClientConnectorError as e:
                 logger.error("Error connect to webhook server :%s",str(e))
                 webhook_queue.put_nowait(webhook_data)
@@ -89,7 +90,6 @@ def update_invoice_from_transaction(transaction):
 
 
 async def transactions_check():
-    logger.debug("Checking transactions")
     db.mark_expired()
     pending_invoices = db.load_pending_invoices_ids(crypto.wallet)
     if len(pending_invoices) > 0:

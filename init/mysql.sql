@@ -1,7 +1,7 @@
 DROP TABLE IF EXISTS `invoices`;
 CREATE TABLE `invoices` (
   `id` VARCHAR(64) NOT NULL,
-  `amount` INT NOT NULL,
+  `amount` INT(16) NOT NULL,
   `srcpurse` VARCHAR(128) NOT NULL,
   `dstpurse` VARCHAR(128) NOT NULL,
   `status` ENUM ('pending','completed','expired','error')  NOT NULL DEFAULT 'pending',

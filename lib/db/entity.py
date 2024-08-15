@@ -65,7 +65,7 @@ class Invoice:
         if 'amount' not in data:
             raise Exception('amount field missing')
         #TODO validate amount int
-        parsed['amount'] = data['amount']
+        parsed['amount'] = float(data['amount'])
 
         if 'srcpurse' not in data:
             raise Exception('srcpurse field missing')
