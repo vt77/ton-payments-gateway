@@ -28,12 +28,12 @@ class PostgresBackend:
     def connection(self):
         try:
             conn = connector.connect(pool_name = "invoicepool") 
-            yield conn
+            yield self._conn
         except (connector.errors.ProgrammingError, connector.errors.DatabaseError) as ex:
             logger.error(str(ex))
             raise BackendErrorException('Database error. See logs') from ex
         finally:
-            conn.commit()
+            self._conn.commit()
 
     def create_invoice(self,**invoice_data):
         invoice_id = shortuuid.uuid()
