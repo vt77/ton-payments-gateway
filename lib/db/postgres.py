@@ -51,21 +51,21 @@ class PostgresBackend:
     def load_invoice(self,invoice_id):
         logger.info('load invoice %s',invoice_id)
         with self.connection() as conn:
-            cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute(_SELECT_QUERY,{'id':invoice_id})
             return Invoice(**dict(next(cur)))
 
     def load_invoices(self,wallet,count=100):
         logger.info('load invoices %s',wallet)
         with self.connection() as conn:
-            cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute(_SELECT_LIST_QUERY,(wallet,count))
             return [Invoice(**row) for row in cur]
 
     def load_pending_invoices_ids(self,wallet):
         """Loads invoices in status pending and not expired """
         with self.connection() as conn:
-            cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
             cur.execute(_SELECT_PENDING,(wallet,))
             return [row['id'] for row in cur]
 
