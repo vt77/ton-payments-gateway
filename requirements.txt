@@ -1,1 +1,6 @@
 shortuuid
+aiohttp
+psycopg2
+mysql-connector-python
+urllib3
+

@@ -10,13 +10,12 @@ import hashlib
 sys.path.append(os.path.join(os.path.dirname(__file__), "lib"))
 
 import config
-from utils import get_my_ip
-from db.mysql import MySqlBackend
+from utils import get_my_ip,create_db_backend
 from crypto.toncenter import CryptoApiTopCenter as CryptoApi
 from db.entity import Invoice
 from telegrambot import TelegramBot
 
-db = MySqlBackend(**config.db)
+db =  create_db_backend(**config.db)
 crypto = CryptoApi()
 telegrambot = TelegramBot(**config.telegrambot)
 
@@ -57,7 +56,7 @@ async def webhook_queue_processor():
         logger.debug('Sending webhook %s attempt %s',webhook_data['invoice']['id'],webhook_data['attempt'])
         async with aiohttp.ClientSession() as session:
             try:
-                async with session.post(config.api['webhook_url'],json=json.dumps(webhook_data)) as resp:
+                async with session.post(config.api['webhook_url'],json=webhook_data) as resp:
                     if not accepted_statuses(resp.status):
                         logger.warning(f'webhook bad status code : %s %s',resp.status,webhook_data)
                         if webhook_data['attempt'] < 3:
