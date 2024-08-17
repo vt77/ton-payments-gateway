@@ -27,7 +27,6 @@ class PostgresBackend:
     @contextmanager
     def connection(self):
         try:
-            conn = connector.connect(pool_name = "invoicepool") 
             yield self._conn
         except (connector.errors.ProgrammingError, connector.errors.DatabaseError) as ex:
             logger.error(str(ex))
