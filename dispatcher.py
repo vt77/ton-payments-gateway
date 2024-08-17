@@ -94,7 +94,6 @@ async def transactions_check():
     if len(pending_invoices) > 0:
         logger.debug("Pending invoices count %s",len(pending_invoices))
         for t in crypto.transactions:
-            logger.debug("Check transaction %s",t)
             if t.invoice_id in pending_invoices:
                 try:
                     invoice = update_invoice_from_transaction(t)
