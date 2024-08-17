@@ -18,7 +18,7 @@ _UPDATE_STATUS_QUERY = "UPDATE invoices SET status=%(status)s, transaction=%(tra
 _SELECT_PENDING = "SELECT id FROM invoices WHERE dstpurse=%s AND expired>CURRENT_TIMESTAMP AT TIME ZONE 'UTC'() AND status='pending'"
 _UPDATE_EXPIRED = "UPDATE invoices SET status='expired' WHERE expired<=CURRENT_TIMESTAMP AT TIME ZONE 'UTC'()"
 
-class MySqlBackend:
+class PostgresBackend:
 
     def __init__(self,**config):
         self._conn  = connector.connect(**config)

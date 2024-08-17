@@ -18,7 +18,7 @@ from utils import create_db_backend
 logging.basicConfig(stream=sys.stdout,level=logging.DEBUG)
 logger = logging.getLogger()
 
-db = create_db_backend(config.db)
+db = create_db_backend(**config.db)
 routes = web.RouteTableDef()
 crypto = CryptoApiTopCenter()
 telegrambot = TelegramBot(**config.telegrambot)
