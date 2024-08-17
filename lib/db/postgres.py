@@ -11,12 +11,12 @@ from datetime import datetime, timedelta, timezone
 logger = logging.getLogger(__name__)
 
 
-_INSERT_QUERY = "INSERT INTO invoices (id,amount,srcpurse,dstpurse,context,expired,last_update) VALUES (%(id)s,%(amount)s,%(srcpurse)s,%(dstpurse)s,%(context)s,%(expired)s,CURRENT_TIMESTAMP AT TIME ZONE 'UTC'())"
+_INSERT_QUERY = "INSERT INTO invoices (id,amount,srcpurse,dstpurse,context,expired,last_update) VALUES (%(id)s,%(amount)s,%(srcpurse)s,%(dstpurse)s,%(context)s,%(expired)s,CURRENT_TIMESTAMP AT TIME ZONE 'UTC')"
 _SELECT_QUERY = 'SELECT * FROM invoices WHERE id=%(id)s'
 _SELECT_LIST_QUERY = 'SELECT * FROM invoices WHERE dstpurse=%s ORDER BY last_update DESC LIMIT %s'
-_UPDATE_STATUS_QUERY = "UPDATE invoices SET status=%(status)s, transaction=%(transaction)s, last_update=CURRENT_TIMESTAMP AT TIME ZONE 'UTC'() WHERE id=%(id)s"
-_SELECT_PENDING = "SELECT id FROM invoices WHERE dstpurse=%s AND expired>CURRENT_TIMESTAMP AT TIME ZONE 'UTC'() AND status='pending'"
-_UPDATE_EXPIRED = "UPDATE invoices SET status='expired' WHERE expired<=CURRENT_TIMESTAMP AT TIME ZONE 'UTC'()"
+_UPDATE_STATUS_QUERY = "UPDATE invoices SET status=%(status)s, transaction=%(transaction)s, last_update=CURRENT_TIMESTAMP AT TIME ZONE 'UTC' WHERE id=%(id)s"
+_SELECT_PENDING = "SELECT id FROM invoices WHERE dstpurse=%s AND expired>CURRENT_TIMESTAMP AT TIME ZONE 'UTC' AND status='pending'"
+_UPDATE_EXPIRED = "UPDATE invoices SET status='expired' WHERE expired<=CURRENT_TIMESTAMP AT TIME ZONE 'UTC'"
 
 class PostgresBackend:
 
@@ -51,7 +51,7 @@ class PostgresBackend:
     def load_invoice(self,invoice_id):
         logger.info('load invoice %s',invoice_id)
         with self.connection() as conn:
-            cur = conn.cursor(dictionary=True)
+            cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
             cur.execute(_SELECT_QUERY,{'id':invoice_id})
             return Invoice(**dict(next(cur)))
 
