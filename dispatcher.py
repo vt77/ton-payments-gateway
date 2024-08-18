@@ -100,10 +100,10 @@ async def transactions_check():
                     webhook_data = create_webhook_data(invoice)
                     logger.debug("Append webhook queue %s",webhook_data)
                     webhook_queue.put_nowait(create_webhook_data(invoice))
-                    message_queue.put_nowait(f"<b>Invoice paid</b>\nId: {t.invoice_id}\nAmount: {invoice.amount}\nFrom: {t._srcpurse}\nTo: {t._dstpurse} Transaction: {t.hash}")
+                    message_queue.put_nowait(f"#invoice_paid\nId: <code>{t.invoice_id}</code>\nAmount: {invoice.amount}\nFrom: {t._srcpurse}\nTo: {t._dstpurse} Transaction: {t.hash}")
                 except Exception as ex:
                     logger.exception(str(ex))
-                    message_queue.put_nowait(f"#whereismyfucknmoney Invoice {t.invoice_id} process error : {str(ex)}")
+                    message_queue.put_nowait(f"#where_is_my_fuckn_money Invoice {t.invoice_id} process error : {str(ex)}")
 
 async def transactions_check_processor():
 
