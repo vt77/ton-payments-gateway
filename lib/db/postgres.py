@@ -21,13 +21,15 @@ _UPDATE_EXPIRED = "UPDATE invoices SET status='expired' WHERE expired<=CURRENT_T
 class PostgresBackend:
 
     def __init__(self,**config):
-        self._conn  = connector.connect(**config)
+        self._conn_pool  = connector.pool.SimpleConnectionPool(minconn=1, maxconn=20,**config)
 
 
     @contextmanager
     def connection(self):
         try:
-            yield self._conn
+            conn = self._conn_pool.getconn()
+            yield conn
+            self._conn_pool.putconn(conn)
         except (connector.errors.ProgrammingError, connector.errors.DatabaseError) as ex:
             logger.error(str(ex))
             raise BackendErrorException('Database error. See logs') from ex
