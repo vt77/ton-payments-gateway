@@ -15,7 +15,7 @@ from telegrambot import TelegramBot
 from utils import create_db_backend
 
 
-logging.basicConfig(stream=sys.stdout,level=logging.DEBUG)
+logging.basicConfig(stream=sys.stdout,level=logging.INFO)
 logger = logging.getLogger()
 
 db = create_db_backend(**config.db)

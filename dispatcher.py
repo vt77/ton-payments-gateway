@@ -25,7 +25,7 @@ message_queue = asyncio.Queue()
 logging.basicConfig(
     format="[TONDISPATCHER]%(asctime)-15s %(process)d %(levelname)s %(name)s %(message)s",
     stream=sys.stdout,
-    level=logging.DEBUG,
+    level=logging.INFO,
 )
 logger = logging.getLogger()
 
