@@ -11,7 +11,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), "lib"))
 
 import config
 from utils import get_my_ip,create_db_backend
-from crypto.toncenter import CryptoApiTopCenter as CryptoApi
+from crypto.toncenter import CryptoException, CryptoApiTopCenter as CryptoApi
 from db.entity import Invoice
 from telegrambot import TelegramBot
 
@@ -32,6 +32,10 @@ logger = logging.getLogger()
 IP = get_my_ip()
 SIGN_KEY = config.api['sign_key']
 logger.debug('Using external IP %s',IP)
+
+
+class DispatcherException(Exception):
+    """Dispatcher error exception """
 
 def accepted_statuses(status_code):
     return status_code in [200,204]
@@ -89,21 +93,26 @@ def update_invoice_from_transaction(transaction):
 
 
 async def transactions_check():
-    db.mark_expired()
-    pending_invoices = db.load_pending_invoices_ids(crypto.wallet)
-    if len(pending_invoices) > 0:
-        logger.debug("Pending invoices count %s",len(pending_invoices))
-        for t in crypto.transactions:
-            if t.invoice_id in pending_invoices:
+    try:
+        db.mark_expired()
+        pending_invoices = db.load_pending_invoices_ids(crypto.wallet)
+        if len(pending_invoices) > 0:
+            logger.debug("Pending invoices count %s",len(pending_invoices))
+            for t in crypto.transactions:
                 try:
-                    invoice = update_invoice_from_transaction(t)
-                    webhook_data = create_webhook_data(invoice)
-                    logger.debug("Append webhook queue %s",webhook_data)
-                    webhook_queue.put_nowait(create_webhook_data(invoice))
-                    message_queue.put_nowait(f"#invoice_paid\nId: <code>{t.invoice_id}</code>\nAmount: {invoice.amount}\nFrom: {t._srcpurse}\nTo: {t._dstpurse} Transaction: {t.hash}")
+                    if t.invoice_id in pending_invoices:
+                        invoice = update_invoice_from_transaction(t)
+                        webhook_data = create_webhook_data(invoice)
+                        logger.debug("Append webhook queue %s",webhook_data)
+                        webhook_queue.put_nowait(create_webhook_data(invoice))
+                        message_queue.put_nowait(f"<b>Invoice paid</b>\nId: {t.invoice_id}\nAmount: {invoice.amount}\nFrom: {t._srcpurse}\nTo: {t._dstpurse} Transaction: {t.hash}")
                 except Exception as ex:
-                    logger.exception(str(ex))
-                    message_queue.put_nowait(f"#where_is_my_fuckn_money Invoice {t.invoice_id} process error : {str(ex)}")
+                    message_queue.put_nowait(f"#whereismyfucknmoney Invoice {t.invoice_id} process error : {str(ex)}")
+                    raise DispatcherException(f"Invoice {t.invoice_id} process error : {str(ex)}")
+    except CryptoException as ex:
+        logger.error(f"transactions_check crypto error: {str(ex)}")
+    except Exception as ex:
+        logger.exception(str(ex))
 
 async def transactions_check_processor():
 

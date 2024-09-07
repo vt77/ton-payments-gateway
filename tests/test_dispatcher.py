@@ -76,3 +76,13 @@ class TestDispatcher(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(invoice_data['status'],'error')
         self.assertEqual(invoice_data['id'],invoice.id)
 
+    @patch('dispatcher.db')
+    @patch('crypto.toncenter.create_request_uri')
+    async def test_transactions_check_api_error(self,url_build,dispdb):
+        dispdb.load_pending_invoices_ids.return_value = [111]
+        url_build.return_value = 'https://httpbin.org/status/401'
+        try:
+            await transactions_check()
+        except Exception:
+            self.fail("transactions_check() raised not handled Exception!")
+

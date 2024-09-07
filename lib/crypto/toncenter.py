@@ -24,17 +24,25 @@ class CryptoException(Exception):
     """ Handles crypto errors""" 
 
 
+def create_request_uri(address,method,params=None):
+    url = f"{API_BASE}{method}?address={address}&api_key={API_TOKEN}"
+    if params:
+        url = "&".join([url,urlencode(params)])
+    return url
+
 @contextmanager
 def _send_api_request(address,method,params=None):
     try:
-        url = f"{API_BASE}{method}?address={address}&api_key={API_TOKEN}"
-        if params:
-            url = "&".join([url,urlencode(params)])
+        url = create_request_uri(address,method,params)
         r = requests.get(url)
+        if r.status_code != 200:
+            raise CryptoException(f"Toncenter bad return code : {r.status_code}")
         response = json.loads(r.text)
         if not response['ok']:
             raise CryptoException(f"Error process request ({response['code']}): {response['error']}")
         yield response['result']
+    except requests.exceptions.ConnectionError as ex:
+        raise CryptoException("Toncenter connection error") from ex
     except CryptoException as ex:
         raise CryptoException(str(ex)) from ex
     except Exception as ex:
