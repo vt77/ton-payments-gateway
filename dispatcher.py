@@ -105,9 +105,9 @@ async def transactions_check():
                         webhook_data = create_webhook_data(invoice)
                         logger.debug("Append webhook queue %s",webhook_data)
                         webhook_queue.put_nowait(create_webhook_data(invoice))
-                        message_queue.put_nowait(f"<b>Invoice paid</b>\nId: {t.invoice_id}\nAmount: {invoice.amount}\nFrom: {t._srcpurse}\nTo: {t._dstpurse} Transaction: {t.hash}")
+                        message_queue.put_nowait(f"#invoice_paid\nId: <code>{t.invoice_id}</code>\nAmount: {invoice.amount}\nFrom: {t._srcpurse}\nTo: {t._dstpurse}\nTransaction: {t.hash}")
                 except Exception as ex:
-                    message_queue.put_nowait(f"#whereismyfucknmoney Invoice {t.invoice_id} process error : {str(ex)}")
+                    message_queue.put_nowait(f"#whereismyfucknmoney Invoice <code>{t.invoice_id}</code> process error : {str(ex)}")
                     raise DispatcherException(f"Invoice {t.invoice_id} process error : {str(ex)}")
     except CryptoException as ex:
         logger.error(f"transactions_check crypto error: {str(ex)}")
