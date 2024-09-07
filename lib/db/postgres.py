@@ -4,6 +4,7 @@ from .entity import Invoice, BackendErrorException
 from contextlib import contextmanager
 import psycopg2 as connector
 import psycopg2.extras
+import psycopg2.pool
 import logging
 import json
 from datetime import datetime, timedelta, timezone
