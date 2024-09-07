@@ -64,7 +64,7 @@ async def create_invoce(request):
         invoice_data = Invoice.validate(data) 
         invoice_data['dstpurse'] = crypto.wallet
         invoice = db.create_invoice(**invoice_data)
-        telegrambot.send_message(message=f"New invoice created {invoice.id}")
+        telegrambot.send_message(message=f"#new_invoice\nInvoice id: <code>{invoice.id}</code>\nDest wallet: <code>{crypto.wallet}</code>\nAmount: {invoice.amount}")
         nanotons = int(invoice.amount * 1000000000)
         ctx.response = {
             'invoice' : dict(invoice),

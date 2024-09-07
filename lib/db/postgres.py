@@ -16,7 +16,7 @@ _SELECT_QUERY = 'SELECT * FROM invoices WHERE id=%(id)s'
 _SELECT_LIST_QUERY = 'SELECT * FROM invoices WHERE dstpurse=%s ORDER BY last_update DESC LIMIT %s'
 _UPDATE_STATUS_QUERY = "UPDATE invoices SET status=%(status)s, transaction=%(transaction)s, last_update=CURRENT_TIMESTAMP AT TIME ZONE 'UTC' WHERE id=%(id)s"
 _SELECT_PENDING = "SELECT id FROM invoices WHERE dstpurse=%s AND expired>CURRENT_TIMESTAMP AT TIME ZONE 'UTC' AND status='pending'"
-_UPDATE_EXPIRED = "UPDATE invoices SET status='expired' WHERE expired<=CURRENT_TIMESTAMP AT TIME ZONE 'UTC'"
+_UPDATE_EXPIRED = "UPDATE invoices SET status='expired' WHERE expired<=CURRENT_TIMESTAMP AT TIME ZONE 'UTC' AND status='pending'"
 
 class PostgresBackend:
 
